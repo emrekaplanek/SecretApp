@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:secret/provider/google_sign_in.dart';
+import 'package:secret/services/database.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,9 +13,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DatabaseService(uid: user.uid).updateUserSecret('love u so much');
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
         appBar: AppBar(
           title: const Text('SECRET'),
