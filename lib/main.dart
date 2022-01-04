@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:secret/home_page.dart';
 import 'package:secret/login_page.dart';
 import 'package:secret/provider/google_sign_in.dart';
+import 'package:secret/services/database.dart';
+
+import 'models/secret.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,16 +19,23 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => GoogleSignInProvider(),
-        child: MaterialApp(
-          title: 'Secret',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const MyHomePage(title: 'Secret Page'),
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<GoogleSignInProvider>(
+            create: (context) => GoogleSignInProvider()),
+        StreamProvider<List<Secret>?>.value(
+            value: DatabaseService().secrets, initialData: null)
+      ],
+      child: MaterialApp(
+        title: 'Secret',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-      );
+        home: const MyHomePage(title: 'Secret Page'),
+      ),
+    );
+  }
 }
 
 class MyHomePage extends StatefulWidget {

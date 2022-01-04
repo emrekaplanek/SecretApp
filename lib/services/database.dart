@@ -14,7 +14,7 @@ class DatabaseService {
 
   List<Secret> _secretListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Secret(sContext: doc.get('sContext'));
+      return Secret(sContext: doc.get('sContext') ?? "");
     }).toList();
   }
 
