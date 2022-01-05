@@ -28,7 +28,15 @@ class DatabaseService {
   }
 
   Stream<List<Secret>>? get secrets {
-    if (secretCollection.snapshots() != null)
-      return secretCollection.snapshots().map(_secretListFromSnapshot);
+    return secretCollection.snapshots().map(_secretListFromSnapshot);
+  }
+
+  Stream<List<Secret>>? get mySecrets {
+    if (secretCollection.snapshots() != null) {
+      return secretCollection
+          .where('userId', isEqualTo: uid)
+          .snapshots()
+          .map(_secretListFromSnapshot);
+    }
   }
 }

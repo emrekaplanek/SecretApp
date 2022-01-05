@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:secret/home/new_secret.dart';
 import 'package:secret/models/secret.dart';
 import 'package:secret/provider/google_sign_in.dart';
 import 'package:secret/services/database.dart';
@@ -23,7 +24,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void cagir() async {
-    await DatabaseService(uid: user.uid).addUserSecret('baslik', 'oguz dene');
+    //await DatabaseService(uid: user.uid).addUserSecret('baslik', 'oguz dene');
+  }
+
+  void _showSettingsPanel() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 70.0),
+            child: NewSecret(),
+          );
+        });
   }
 
   @override
@@ -60,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                 backgroundImage: NetworkImage(user.photoURL!),
               ),
               ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    _showSettingsPanel();
+                  },
                   icon: Icon(Icons.add_circle_rounded),
                   label: Text('Share Secret')),
               Expanded(child: SecretList()),
