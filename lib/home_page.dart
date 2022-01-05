@@ -19,8 +19,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    DatabaseService(uid: user.uid).updateUserSecret('Love me more');
-    DatabaseService(uid: user.uid).updateUserSecret('Love me more2');
+    cagir();
+  }
+
+  void cagir() async {
+    await DatabaseService(uid: user.uid).addUserSecret('baslik', 'oguz dene');
   }
 
   @override
@@ -56,7 +59,11 @@ class _HomePageState extends State<HomePage> {
                 radius: 50,
                 backgroundImage: NetworkImage(user.photoURL!),
               ),
-              SecretList(),
+              ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.add_circle_rounded),
+                  label: Text('Share Secret')),
+              Expanded(child: SecretList()),
             ],
           ),
         ));

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:secret/home/secret_tile.dart';
 import 'package:secret/models/secret.dart';
 import 'package:secret/services/database.dart';
 
@@ -13,15 +14,16 @@ class SecretList extends StatefulWidget {
 class _SecretListState extends State<SecretList> {
   @override
   Widget build(BuildContext context) {
-    final secrets = Provider.of<List<Secret>>(context);
+    final secrets = Provider.of<List<Secret>?>(context);
     if (secrets != null) {
       secrets.forEach((secret) {
-        print(secret.sContext);
+        print(secret.sContext.toString() + "" + secret.userId);
       });
     }
-    return MultiProvider(providers: [
-      StreamProvider<List<Secret?>?>.value(
-          value: DatabaseService().secrets, initialData: null)
-    ], child: Container());
+    return ListView.builder(
+        itemCount: secrets?.length,
+        itemBuilder: (context, index) {
+          return SecretTile(secret: secrets?[index] ?? Secret(userId: ""));
+        });
   }
 }

@@ -8,17 +8,27 @@ class DatabaseService {
   final CollectionReference secretCollection =
       FirebaseFirestore.instance.collection('secrets');
 
-  Future updateUserSecret(String sContext) async {
-    return await secretCollection.doc(uid).set({'sContext': sContext});
+  Future addUserSecret(String title, String sContext) async {
+    return await secretCollection
+        .doc() //buraya id verirsen o id ile kayıt açar günceller.
+        .set({'title': title, 'sContext': sContext, 'userId': uid});
   }
+
+  //   Future updateUserSecret(String sContext) async {
+  //   return await secretCollection.doc(uid).set({'sContext': sContext});
+  // }
 
   List<Secret> _secretListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Secret(sContext: doc.get('sContext') ?? "");
+      return Secret(
+          title: doc.get('title') ?? "",
+          sContext: doc.get('sContext') ?? "",
+          userId: doc.get('userId') ?? "");
     }).toList();
   }
 
-  Stream<List<Secret>> get secrets {
-    return secretCollection.snapshots().map(_secretListFromSnapshot);
+  Stream<List<Secret>>? get secrets {
+    if (secretCollection.snapshots() != null)
+      return secretCollection.snapshots().map(_secretListFromSnapshot);
   }
 }

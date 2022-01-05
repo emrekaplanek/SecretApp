@@ -25,10 +25,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<GoogleSignInProvider>(
             create: (context) => GoogleSignInProvider()),
         StreamProvider<List<Secret>?>.value(
-            value: DatabaseService().secrets, initialData: null)
+          value: DatabaseService().secrets,
+          initialData: null,
+          catchError: (_, __) => null,
+        )
       ],
       child: MaterialApp(
         title: 'Secret',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
