@@ -55,32 +55,46 @@ class _HomePageState extends State<HomePage> {
           ],
           backgroundColor: Colors.purple,
         ),
-        body: Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Welcome ' + user.displayName!,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic),
+        body: StreamProvider<List<Secret>?>.value(
+            value: DatabaseService(uid: user.uid).secrets,
+            initialData: null,
+            catchError: (_, __) => null,
+            child: Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    'Welcome ' + user.displayName!,
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  const SizedBox(height: 10),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(user.photoURL!),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton.icon(
+                              onPressed: () {
+                                _showSettingsPanel();
+                              },
+                              icon: const Icon(Icons.add_circle_rounded),
+                              label: const Text('Share Secret')),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(child: SecretList()),
+                ],
               ),
-              SizedBox(height: 10),
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(user.photoURL!),
-              ),
-              ElevatedButton.icon(
-                  onPressed: () {
-                    _showSettingsPanel();
-                  },
-                  icon: Icon(Icons.add_circle_rounded),
-                  label: Text('Share Secret')),
-              Expanded(child: SecretList()),
-            ],
-          ),
-        ));
+            )));
   }
 }

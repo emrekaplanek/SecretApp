@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:secret/models/secret.dart';
 
 class DatabaseService {
-  final String? uid;
-  DatabaseService({this.uid});
+  final String uid;
+  DatabaseService({required this.uid});
 //collection reference
   final CollectionReference secretCollection =
       FirebaseFirestore.instance.collection('secrets');
 
   Future addUserSecret(String title, String sContext) async {
+    print(uid);
     return await secretCollection
         .doc() //buraya id verirsen o id ile kayıt açar günceller.
         .set({'title': title, 'sContext': sContext, 'userId': uid});
@@ -28,15 +29,20 @@ class DatabaseService {
   }
 
   Stream<List<Secret>>? get secrets {
-    return secretCollection.snapshots().map(_secretListFromSnapshot);
+    //return secretCollection.snapshots().map(_secretListFromSnapshot);
+    print(uid);
+    return secretCollection
+        .where('userId', isEqualTo: uid)
+        .get()
+        .asStream()
+        .map(_secretListFromSnapshot);
   }
 
-  Stream<List<Secret>>? get mySecrets {
-    if (secretCollection.snapshots() != null) {
-      return secretCollection
-          .where('userId', isEqualTo: uid)
-          .snapshots()
-          .map(_secretListFromSnapshot);
-    }
-  }
+  // Stream<List<Secret>>? get mySecrets {
+  //   return secretCollection
+  //       .where('userId', isEqualTo: uid)
+  //       .get()
+  //       .asStream()
+  //       .map(_secretListFromSnapshot);
+  // }
 }
