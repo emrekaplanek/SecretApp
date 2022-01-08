@@ -4,5 +4,5 @@ A new Flutter project includes firebase, streams, providers and google authentic
 
 ## Getting Started
 
-- [LinkedIn: ](https://www.linkedin.com/in/emrekaplanek/)
+- [LinkedIn](https://www.linkedin.com/in/emrekaplanek/)
 
