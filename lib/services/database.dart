@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:secret/models/mySecret.dart';
 import 'package:secret/models/secret.dart';
 
 class DatabaseService {
-  final String uid;
-  DatabaseService({required this.uid});
-//collection reference
+  final String? uid;
+  DatabaseService({this.uid});
   final CollectionReference secretCollection =
       FirebaseFirestore.instance.collection('secrets');
 
@@ -28,21 +28,25 @@ class DatabaseService {
     }).toList();
   }
 
+  List<MySecret> _mySecretListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return MySecret(
+          title: doc.get('title') ?? "",
+          sContext: doc.get('sContext') ?? "",
+          userId: doc.get('userId') ?? "");
+    }).toList();
+  }
+
   Stream<List<Secret>>? get secrets {
-    //return secretCollection.snapshots().map(_secretListFromSnapshot);
+    return secretCollection.snapshots().map(_secretListFromSnapshot);
+  }
+
+  Stream<List<MySecret>>? get mySecrets {
     print(uid);
     return secretCollection
         .where('userId', isEqualTo: uid)
         .get()
         .asStream()
-        .map(_secretListFromSnapshot);
+        .map(_mySecretListFromSnapshot);
   }
-
-  // Stream<List<Secret>>? get mySecrets {
-  //   return secretCollection
-  //       .where('userId', isEqualTo: uid)
-  //       .get()
-  //       .asStream()
-  //       .map(_secretListFromSnapshot);
-  // }
 }
